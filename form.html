@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Is Your Backup Strategy Resilient?</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            color: #333;
+        }
+        h1 {
+            color: #702963;
+            margin-bottom: 10px;
+        }
+        h2 {
+            color: #702963;
+            margin-top: 30px;
+        }
+        .subtitle {
+            color: #666;
+            font-size: 1.2em;
+            margin-bottom: 30px;
+        }
+        .checklist {
+            margin: 30px 0;
+            padding: 0;
+        }
+        .checklist-item {
+            list-style-type: none;
+            margin-bottom: 15px;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            transition: background-color 0.3s;
+        }
+        .checklist-item:hover {
+            background-color: #f0f0f0;
+        }
+        .checklist-item label {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+        .checklist-item input[type="checkbox"] {
+            margin-right: 15px;
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+        button {
+            background-color: #702963;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 1.1em;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #5a2150;
+        }
+        #results {
+            margin-top: 30px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            display: none;
+        }
+        .score {
+            font-size: 1.2em;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .recommendation-title {
+            font-weight: bold;
+            margin-top: 20px;
+            color: #702963;
+        }
+        .recommendation {
+            margin-top: 5px;
+            padding-left: 20px;
+        }
+        .score-range {
+            margin: 5px 0;
+        }
+        .logo {
+            margin-top: 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo img {
+            max-width: 150px;
+        }
+        .contact-info {
+            text-align: right;
+            font-size: 0.9em;
+            color: #666;
+        }
+        .print-button {
+            background-color: #4CAF50;
+            margin-left: 10px;
+        }
+        .button-group {
+            display: flex;
+        }
+        .divider {
+            margin: 30px 0;
+            border-top: 1px solid #ddd;
+        }
+        @media print {
+            button {
+                display: none;
+            }
+            #results {
+                display: block !important;
+                border: none;
+            }
+            .checklist-item {
+                box-shadow: none;
+                background-color: white;
+                border: 1px solid #ddd;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Is Your Backup Strategy Resilient?</h1>
+    <div class="subtitle">A quick checklist to assess the strength of your backup and recovery strategy</div>
+    
+    <form id="backupForm">
+        <ul class="checklist">
+            <li class="checklist-item">
+                <label>
+                    <input type="checkbox" name="backup" value="We back up all workloads">
+                    We back up all workloads - physical, virtual, cloud, NAS, databases
+                </label>
+            </li>
+            <li class="checklist-item">
+                <label>
+                    <input type="checkbox" name="backup" value="We test restores regularly">
+                    We test restores regularly (RTO < 1h)
+                </label>
+            </li>
+            <li class="checklist-item">
+                <label>
+                    <input type="checkbox" name="backup" value="Ransomware detection active">
+                    Ransomware detection active (GuardMode)
+                </label>
+            </li>
+            <li class="checklist-item">
+                <label>
+                    <input type="checkbox" name="backup" value="Backup storage deduplicated">
+                    Backup storage deduplicated (vStor)
+                </label>
+            </li>
+            <li class="checklist-item">
+                <label>
+                    <input type="checkbox" name="backup" value="3-2-1-1 backup rule followed">
+                    3-2-1-1 backup rule followed
+                </label>
+            </li>
+            <li class="checklist-item">
+                <label>
+                    <input type="checkbox" name="backup" value="Centralized backup policies">
+                    Centralized backup policies and automation (DPX)
+                </label>
+            </li>
+            <li class="checklist-item">
+                <label>
+                    <input type="checkbox" name="backup" value="Backup health monitored">
+                    Backup health monitored
+                </label>
+            </li>
+            <li class="checklist-item">
+                <label>
+                    <input type="checkbox" name="backup" value="Known RTO/RPO per workload">
+                    Known RTO/RPO per workload
+                </label>
+            </li>
+            <li class="checklist-item">
+                <label>
+                    <input type="checkbox" name="backup" value="Disaster-ready">
+                    Disaster-ready, not just audit-ready
+                </label>
+            </li>
+        </ul>
+        
+        <div class="button-group">
+            <button type="button" id="evaluateButton">Evaluate My Strategy</button>
+            <button type="button" id="printButton" class="print-button" style="display:none;">Print Results</button>
+        </div>
+    </form>
+    
+    <div id="results">
+        <h2>Your Backup Strategy Assessment</h2>
+        <div id="score" class="score"></div>
+        
+        <div class="score-range">7-9: Resilient, modern backup strategy</div>
+        <div class="score-range">4-6: Doing okay – but needs improvements</div>
+        <div class="score-range">0-3: Time for a strategic refresh</div>
+        
+        <div id="summary"></div>
+        
+        <h2>Recommendations</h2>
+        <div id="recommendations"></div>
+    </div>
+    
+    <div class="divider"></div>
+    
+    <div class="logo">
+        <div>
+            <svg width="150" height="50" viewBox="0 0 200 70">
+                <polygon points="30,10 10,50 30,50 50,10" fill="#702963" />
+                <polygon points="40,30 20,70 40,70 60,30" fill="#902983" />
+                <text x="70" y="45" font-family="Arial" font-weight="bold" font-size="20" fill="#702963">CATALOGIC</text>
+            </svg>
+        </div>
+        <div class="contact-info">
+            <div>Email: info@catalogicsoftware.com</div>
+            <div>Phone: +1 201 249 8980</div>
+            <div>Support Phone: +1 201 930 8280</div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('evaluateButton').addEventListener('click', function() {
+            evaluateBackupStrategy();
+        });
+        
+        document.getElementById('printButton').addEventListener('click', function() {
+            window.print();
+        });
+        
+        function evaluateBackupStrategy() {
+            const checkboxes = document.querySelectorAll('input[name="backup"]:checked');
+            const score = checkboxes.length;
+            const checkedItems = Array.from(checkboxes).map(cb => cb.value);
+            const uncheckedItems = Array.from(document.querySelectorAll('input[name="backup"]:not(:checked)')).map(cb => cb.value);
+            
+            let scoreText = '';
+            let summaryText = '';
+            
+            if (score >= 7) {
+                scoreText = `Your Score: ${score}/9 - Resilient, modern backup strategy`;
+                summaryText = 'Congratulations! Your backup strategy demonstrates strong resilience and follows modern data protection best practices.';
+            } else if (score >= 4) {
+                scoreText = `Your Score: ${score}/9 - Doing okay – but needs improvements`;
+                summaryText = 'Your backup strategy has some good elements, but there are important areas that need improvement to ensure complete data protection.';
+            } else {
+                scoreText = `Your Score: ${score}/9 - Time for a strategic refresh`;
+                summaryText = 'Your backup strategy needs significant improvement. Consider a comprehensive review of your data protection approach.';
+            }
+            
+            document.getElementById('score').textContent = scoreText;
+            document.getElementById('summary').innerHTML = `<p>${summaryText}</p>`;
+            
+            // Generate recommendations
+            const recommendations = generateRecommendations(uncheckedItems);
+            const recommendationsHTML = recommendations.map(rec => 
+                `<div class="recommendation-title">${rec.title}</div>
+                 <div class="recommendation">${rec.description}</div>`
+            ).join('');
+            
+            document.getElementById('recommendations').innerHTML = recommendationsHTML;
+            document.getElementById('results').style.display = 'block';
+            document.getElementById('printButton').style.display = 'inline-block';
+        }
+        
+        function generateRecommendations(uncheckedItems) {
+            const recommendationData = {
+                "We back up all workloads": {
+                    title: "Implement comprehensive backup coverage",
+                    description: "Ensure all workloads are backed up, including physical servers, virtual machines, cloud resources, NAS devices, and databases. Missing any environment creates a significant vulnerability in your data protection strategy."
+                },
+                "We test restores regularly": {
+                    title: "Establish regular restore testing",
+                    description: "Implement a schedule for testing backup restores with a Recovery Time Objective (RTO) of less than 1 hour. Regular testing validates your recovery capabilities and identifies potential issues before a real disaster."
+                },
+                "Ransomware detection active": {
+                    title: "Deploy ransomware detection",
+                    description: "Implement GuardMode or similar ransomware detection technology to provide early warning of potential attacks. This adds a critical layer of protection against increasingly sophisticated ransomware threats."
+                },
+                "Backup storage deduplicated": {
+                    title: "Implement deduplication technology",
+                    description: "Deploy storage deduplication technology like vStor to optimize storage utilization and reduce costs. Deduplication significantly reduces the storage footprint of your backups while maintaining data integrity."
+                },
+                "3-2-1-1 backup rule followed": {
+                    title: "Adopt the 3-2-1-1 backup rule",
+                    description: "Implement the 3-2-1-1 rule: maintain 3 copies of data, on 2 different media types, with 1 copy offsite, and 1 copy offline/air-gapped or immutable. This strategy provides comprehensive protection against various failure scenarios."
+                },
+                "Centralized backup policies": {
+                    title: "Centralize backup policies and automation",
+                    description: "Implement a centralized policy management system (like DPX) to streamline administration and ensure consistent protection across all environments. Automation reduces human error and ensures backups occur reliably."
+                },
+                "Backup health monitored": {
+                    title: "Implement backup health monitoring",
+                    description: "Deploy monitoring tools to proactively track backup job status, success rates, and storage utilization. Regular monitoring allows you to address issues before they impact your recovery capabilities."
+                },
+                "Known RTO/RPO per workload": {
+                    title: "Define RTO/RPO per workload",
+                    description: "Establish clear Recovery Time Objectives (RTO) and Recovery Point Objectives (RPO) for each workload based on business criticality. Having defined metrics ensures your backup strategy meets specific business needs."
+                },
+                "Disaster-ready": {
+                    title: "Enhance disaster readiness",
+                    description: "Move beyond audit compliance to true disaster readiness with documented recovery procedures, assigned responsibilities, and regular drills. Being disaster-ready ensures you can recover quickly when a real event occurs."
+                }
+            };
+            
+            return uncheckedItems.map(item => recommendationData[item]);
+        }
+    </script>
+</body>
+</html>
